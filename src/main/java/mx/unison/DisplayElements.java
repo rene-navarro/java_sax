@@ -36,7 +36,7 @@ public class DisplayElements extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
                              Attributes attributes) throws SAXException {
         System.out.printf("Inicio de elemento: %s\n", qName);
-        if (localName.equals("name")) {
+        if ( qName.equals("name") ) {
             inName = true;
         }
         if( attributes.getLength() > 0 ) {
@@ -50,13 +50,17 @@ public class DisplayElements extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
-        inName = false;
+        if (qName.equals("name")) {
+            inName = false;
+        }
     }
 
+    @Override
     public void characters(char[] ch, int start, int length)
             throws SAXException {
+
         if (inName) {
-            String name = new String(ch, start, length);
+             String name = new String(ch, start, length);
             System.out.printf("\t%s\n",name);
         }
     }
