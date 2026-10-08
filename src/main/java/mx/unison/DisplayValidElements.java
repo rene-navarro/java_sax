@@ -1,8 +1,8 @@
 package mx.unison;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -10,18 +10,19 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class DisplayElements extends DefaultHandler {
+public class DisplayValidElements extends DefaultHandler {
     private static final String CLASS_NAME =
-            DisplayElements.class.getName();
+            DisplayValidElements.class.getName();
     private final static Logger LOG = Logger.getLogger(CLASS_NAME);
 
     // entramos al elemento <name> ?
     private boolean inName = false;
 
-    public DisplayElements() {
+    public DisplayValidElements() {
         super();
         inName = false;
     }
@@ -65,20 +66,6 @@ public class DisplayElements extends DefaultHandler {
         System.out.println("FIN DE DOCUMENTO XML\n");
     }
 
-
-    public void warning(SAXParseException e) throws SAXException {
-        LOG.warning( e.getMessage() );
-    }
-    public void error(SAXParseException e) throws SAXException {
-        LOG.severe( e.getMessage() );
-        throw e;
-    }
-
-    public void fatalError(SAXParseException e) throws SAXException {
-        LOG.severe( e.getMessage() );
-        throw e;
-    }
-
     static void main(String[] args) {
         if (args.length == 0) {
             LOG.severe("No se especifica el documento del XML");
@@ -87,22 +74,28 @@ public class DisplayElements extends DefaultHandler {
 
         // definir objeto para configurar parser
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setValidating(false);
+        factory.setValidating(true);
 
 
         SAXParser saxParser = null;
         try {
             // crear parser con las propiedades solicitadas
             saxParser = factory.newSAXParser();
-
         } catch (ParserConfigurationException | SAXException e) {
             LOG.severe(e.getMessage());
         }
 
-        File xmlDocument = new File(args[0]);
-        DisplayElements handler = new DisplayElements();
+
+
         try {
-            saxParser.parse( xmlDocument, handler );
+            File xmlDocument = new File(args[0]);
+
+
+            XMLReader xmlReader = saxParser.getXMLReader();
+            xmlReader.setContentHandler(new DisplayValidElements());
+            xmlReader.setErrorHandler(new MyErrorHandler());
+
+            xmlReader.parse(new InputSource(new FileReader(xmlDocument)));
 
         } catch (SAXException e) {
             LOG.info(e.getMessage());
