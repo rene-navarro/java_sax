@@ -1,6 +1,5 @@
 package mx.unison;
 
-import mx.unison.menu.BreakFastHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -10,7 +9,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.logging.Logger;
 
 public class DisplayElements extends DefaultHandler {
@@ -18,6 +16,7 @@ public class DisplayElements extends DefaultHandler {
             DisplayElements.class.getName();
     private final static Logger LOG = Logger.getLogger(CLASS_NAME);
 
+    // entramos al elemento <name> ?
     private boolean inName = false;
 
     @Override
@@ -47,7 +46,7 @@ public class DisplayElements extends DefaultHandler {
         }
     }
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         if (args.length == 0) {
             LOG.severe("No se especifica el documento del XML");
             System.exit(1);
@@ -66,12 +65,12 @@ public class DisplayElements extends DefaultHandler {
             LOG.severe(e.getMessage());
         }
 
-        File xmlFile = new File(args[0]);
+        File xmlDocument = new File(args[0]);
         DisplayElements handler = new DisplayElements();
         try {
-            saxParser.parse(xmlFile, handler);
+            saxParser.parse( xmlDocument, handler );
         } catch (SAXException e) {
-            e.printStackTrace();
+            LOG.info(e.getMessage());
         } catch (IOException e) {
             LOG.severe(e.getMessage());
         }
