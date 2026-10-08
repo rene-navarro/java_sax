@@ -91,7 +91,7 @@ public class DisplayElements extends DefaultHandler {
 
         // definir objeto para configurar parser
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setValidating(false);
+        factory.setValidating(true);
 
 
         SAXParser saxParser = null;
