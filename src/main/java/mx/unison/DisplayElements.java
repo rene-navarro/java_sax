@@ -19,6 +19,17 @@ public class DisplayElements extends DefaultHandler {
     // entramos al elemento <name> ?
     private boolean inName = false;
 
+    public DisplayElements() {
+        super();
+        inName = false;
+    }
+
+    @Override
+    public void startDocument() throws SAXException {
+        System.out.println("INICIO DEL DOCUMENTO XML\n");
+    }
+
+
     @Override
     public void startElement(String uri, String localName, String qName,
                              Attributes attributes) throws SAXException {
@@ -35,16 +46,24 @@ public class DisplayElements extends DefaultHandler {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName)
+            throws SAXException {
         inName = false;
     }
 
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length)
+            throws SAXException {
         if (inName) {
             String name = new String(ch, start, length);
             System.out.printf("\t%s\n",name);
         }
     }
+
+    public void endDocument() throws SAXException {
+        System.out.println("FIN DE DOCUMENTO XML\n");
+    }
+
+
 
     static void main(String[] args) {
         if (args.length == 0) {
@@ -76,6 +95,4 @@ public class DisplayElements extends DefaultHandler {
         }
 
     }
-
-
 }
